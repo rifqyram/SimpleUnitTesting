@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">UnitTesting</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="go_to_second_activity">Go To Second Activity</string>
+    <string name="secondary_activity">Secondary Activity</string>
+    <string name="back">Back</string>
+</resources>
