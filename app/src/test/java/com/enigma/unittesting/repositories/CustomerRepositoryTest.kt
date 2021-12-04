@@ -3,8 +3,7 @@ package com.enigma.unittesting.repositories
 import com.enigma.unittesting.data.dao.CustomerDao
 import com.enigma.unittesting.data.model.Customer
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +13,6 @@ import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
 @RunWith(JUnit4::class)
-@ExperimentalCoroutinesApi
 class CustomerRepositoryTest {
     private val dummyCustomer = Customer(1, "Rifqi", "Jakarta")
 
@@ -30,20 +28,20 @@ class CustomerRepositoryTest {
     }
 
     @Test
-    fun customerRepo_registerNew() = runBlockingTest {
+    fun customerRepo_registerNew() = runBlocking {
         customerRepository.registerNewCustomer(dummyCustomer)
         verify(dao, times(1)).insert(dummyCustomer)
     }
 
     @Test
-    fun customerRepo_getById() = runBlockingTest {
+    fun customerRepo_getById() = runBlocking {
         `when`(customerRepository.getCustomer(dummyCustomer.uid)).thenReturn(dummyCustomer)
         val customer = customerRepository.getCustomer(1)
         assertThat(customer.uid).isEqualTo(dummyCustomer.uid)
     }
 
     @Test
-    fun customerRepo_getAll() = runBlockingTest {
+    fun customerRepo_getAll() = runBlocking {
         `when`(customerRepository.getCustomer()).thenReturn(listOf(
             dummyCustomer,
             dummyCustomer.copy(2),
@@ -54,7 +52,7 @@ class CustomerRepositoryTest {
     }
 
     @Test
-    fun customerRepo_deleteAll() = runBlockingTest {
+    fun customerRepo_deleteAll() = runBlocking {
         customerRepository.deleteCustomer(dummyCustomer)
         verify(dao, times(1)).delete(dummyCustomer)
     }

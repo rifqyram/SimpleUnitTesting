@@ -35,17 +35,38 @@ class MainViewModelTest {
     }
 
     @Test
-    fun mainViewModel_registerNewCustomer() = runBlocking {
-        `when`(customerRepository.registerNewCustomer(customerDummy)).thenAnswer { Unit }
+    fun mainViewModel_registerNewCustomer_test() = runBlocking {
+        doAnswer { Unit }.`when`(customerRepository).registerNewCustomer(customerDummy)
         mainViewModel.addCustomer(customerDummy)
         verify(customerRepository, times(1)).registerNewCustomer(customerDummy)
     }
 
     @Test
-    fun mainViewModel_getCustomerById() = runBlocking {
+    fun mainViewModel_getCustomerById_test() = runBlocking {
         `when`(customerRepository.getCustomer(1)).thenReturn(customerDummy)
         mainViewModel.getCustomerById(1)
         val actual = mainViewModel.customerLiveData.getOrAwaitValue()
         assertThat(actual.uid).isEqualTo(customerDummy.uid)
+    }
+
+    @Test
+    fun mainViewModel_deleteCustomer_test() = runBlocking {
+        doAnswer { Unit }.`when`(customerRepository).deleteCustomer(customerDummy)
+        mainViewModel.deleteCustomer(customerDummy)
+        verify(customerRepository, times(1)).deleteCustomer(customerDummy)
+    }
+
+    @Test
+    fun mainViewMode_getAllCustomer_test() = runBlocking {
+        `when`(customerRepository.getCustomer()).thenReturn(
+            listOf(
+                customerDummy,
+                customerDummy.copy(2),
+                customerDummy.copy(3)
+            )
+        )
+        mainViewModel.getCustomers()
+        val actual = mainViewModel.customersLiveData.getOrAwaitValue()
+        assertThat(actual).hasSize(3)
     }
 }
